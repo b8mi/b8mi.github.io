@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>4</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      min-height: 100%;
+      background: #0a0a1a;
+      color: #eee;
+      font-family: 'Poppins', sans-serif;
+      overflow-x: hidden;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+    body::-webkit-scrollbar { width: 0; }
+    body { scrollbar-width: none; -ms-overflow-style: none; }
+
+    #counter {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #f0c674;
+      margin: 20px 0 0 50px;
+      position: relative;
+      z-index: 2;
+    }
+
+    #buttons {
+      max-width: 420px;
+      margin: 0 auto 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    button {
+      all: unset;
+      width: 100%;
+      padding: 25px 25px;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #aabcee;
+      border: 3px solid #2b63ff;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: border-color .3s, box-shadow .3s, transform .2s, color .3s;
+    }
+    button:hover {
+      color: #fff;
+      border-color: #8a44ff;
+      box-shadow: 0 0 10px #2b63ff, 0 0 20px #8a44ff;
+      transform: scaleY(1.1);
+    }
+    button:active {
+      transform: scaleY(0.95);
+      box-shadow: none;
+      border-color: #2b63ff;
+      color: #aabcee;
+    }
+
+    #stars {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      background: #0a0a1a;
+      z-index: 1;
+    }
+    .dot {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: drift linear infinite;
+    }
+    @keyframes drift {
+      to { transform: translate(120vw, -120vh); }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="counter"></div>
+  <div id="buttons"></div>
+  <div id="stars"></div>
+
+  <script>
+    const starCount = 60;
+
+    (function(){
+      const today  = new Date();
+      const target = new Date(2025, 7, 6);
+      const days   = Math.ceil((target - today) / (1000*60*60*24));
+      const el     = document.getElementById('counter');
+      if      (days > 0)  el.textContent = `${days} DAY${days>1?'S':''}`;
+      else if (days === 0) el.textContent = `Today is Aug 6, 2025!`;
+      else                el.textContent = `Aug 6, 2025 has passed.`;
+    })();
+
+    const examLinks = [
+      "https://docs.google.com/forms/d/e/1FAIpQLSfUoQLDzy2pDd6K_-30HKWT7aJXBrSbgXJj5L6UvYo88h6Ecg/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLScs9me_fCUuuWJgi6-7GNEYjBow9PtPiAfSia997f87GGuJpQ/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSc5rCr0iymffQ0SSpjS4mMb4__S4QhogousZNfDKAFLD0XPOA/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSdKzY0W7j33ka79e24PJAuIKI4HS0AuGPVx8HKPjaBDYPSmmA/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSe_cT16Oe6OVFHq0DjSsnyLPt_heTiCQzDTCJLIxB6t8ZzCYA/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSfMOINQp10wZ_7LTkeiHOADg6snlAwGcS_172zVPf9kpR_1dQ/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSfhwN-x-ZP8nietah8FKskPEAAwWGuVY3q_QR1VaiI13ZhbGQ/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSexc2ORWZe4ddgRqXGmfCYl9gQmLqBAYtecrXsaH7b9pgwllw/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSd5bqhxSh7Y__bvZDJWpG0Kg5Nc-EPN_Q5AZP7xwyZBcPA80Q/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSfbt71i90A4uAT0CaxgG1JkId2pOVzuDSEmN_R6-IcU8VvDgA/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLScJ_UraQOXUnv0qZuyQXcfvDxLrXitnr-AUdhLVv971ysxpHQ/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSf5bz6ASWiZmC8_8Q66uspXoSmvCv8UQr-7AP0O7ZSVRoPyIg/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLScL_w0VwdYTsJdcpwgjKWYp61HhbSlwq_skgdgeLMR6_X6dFg/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSeg4jr-Jueb5AfITNPkkIIaNjsgUe7F-oIUwCQjc4uyjhnJ-A/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSdXWcWQ2wBJShL-WmBLeBH6X7JGHMWeMh5OBFm4cBTR7rmvYA/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSc_kUfyXSxGmFnsj1jO8DzOgemD8w1jOja61dE_l7-5f-uluw/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLScxm0ZoLskK96MpTUK8X4FaNBPodlbWaOPiZ8qiU1vJoMqfFQ/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSeClyMDr0KBm6ldTVS1zN-pkjtgH36Iv5viXmbxR9wNrop1lg/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSemNZ3GwEAB0xlVuVaTdeZAwjuNwjUOqMIqYkr-_BlZzQZf9A/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLScHIiaExQAwQqKSZBYgG6Brsnjm57ky32Z-t-L6rgkeUZRKsA/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSdEKSPYoNssQ-JvttU1KBpUWRPlqPJIzLnm7-HI8HExOZyhXQ/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLScsLqxO-3FLd8JzOl6Gy_WjKu-Fns23MvKLzi88OIU4j_K2lg/closedform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSd0xAIwpfF83pr2QJLRYmPQ8Eg1qPCXuBBtIhBU0F9zfmwBVA/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSdd60r9Rt9XfS3RXClc0Yfceo-nekiaq6TFXi5psvDOxU-Ozg/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSelN0nQx_zbqhbHrL-Nth2Oe4zZN90rJPkiZciAV_dy5ljZfw/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSev8R6LuwwA_iW9A29zoL2sKN1HUn7zXJpK7U317TNAVRrNsg/closedform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSdP2kZ242Bo0EmrYBqw1_FtrtQuHnnCT1RGkCkW23RbZTQHUQ/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLScIqoB5ilfT0LMcruGVjOFSZdJiR3sSeg_6r5HY8lLaFIY2Ug/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSepI7VpqHZ-QFvjs9olBX4fz2UyfbLgUrODqVCd8k_uCEreRQ/viewform"
+    ];
+    const btnContainer = document.getElementById('buttons');
+    examLinks.forEach((link, i) => {
+      const btn = document.createElement('button');
+      btn.textContent = `Open Exam ${i + 1}`;
+      btn.onclick = () => {
+        const sep = link.includes('?') ? '&' : '?';
+        window.open(link + sep + 'authuser=1', '_blank');
+      };
+      btnContainer.appendChild(btn);
+    });
+
+    (function(){
+      const container = document.getElementById('stars');
+      for (let i = 0; i < starCount; i++){
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        const size = Math.random() * 2 + 1;
+        dot.style.width  = `${size}px`;
+        dot.style.height = `${size}px`;
+        dot.style.top    = `${Math.random() * 100}%`;
+        dot.style.left   = `${Math.random() * 100}%`;
+        dot.style.animationDuration = `${8 + Math.random() * 7}s`;
+        dot.style.animationDelay    = `${-Math.random() * 10}s`;
+        container.appendChild(dot);
+      }
+    })();
+  </script>
+</body>
+</html>

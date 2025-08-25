@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>2</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      min-height: 100%;
+      background: #0a0a1a;
+      color: #eee;
+      font-family: 'Poppins', sans-serif;
+      overflow-x: hidden;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+    body::-webkit-scrollbar { width: 0; }
+    body { scrollbar-width: none; -ms-overflow-style: none; }
+
+    #counter {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #f0c674;
+      margin: 20px 0 0 50px;
+      position: relative;
+      z-index: 2;
+    }
+
+    #buttons {
+      max-width: 420px;
+      margin: 0 auto 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    button {
+      all: unset;
+      width: 100%;
+      padding: 25px 25px;    
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #aabcee;
+      border: 3px solid #2b63ff;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: border-color .3s, box-shadow .3s, transform .2s, color .3s;
+    }
+    button:hover {
+      color: #fff;
+      border-color: #8a44ff;
+      box-shadow: 0 0 10px #2b63ff, 0 0 20px #8a44ff;
+      transform: scaleY(1.1);       
+    }
+    button:active {
+      transform: scaleY(0.95);     
+      box-shadow: none;
+      border-color: #2b63ff;
+      color: #aabcee;
+    }
+
+    #stars {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      background: #0a0a1a;
+      z-index: 1;
+    }
+    .dot {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: drift linear infinite;
+    }
+    @keyframes drift {
+      to { transform: translate(120vw, -120vh); }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="counter"></div>
+  <h1>📚 Links 📚</h1>
+  <div id="buttons"></div>
+  <div id="stars"></div>
+
+  <script>
+    // CONFIG: how many stars?
+    const starCount = 60;
+
+    // DAYS COUNTER
+    (function(){
+      const today  = new Date();
+      const target = new Date(2025, 7, 6); // Aug 6, 2025
+      const days   = Math.ceil((target - today) / (1000*60*60*24));
+      const el     = document.getElementById('counter');
+      if      (days > 0)  el.textContent = `${days} DAY${days>1?'S':''}`;
+      else if (days === 0) el.textContent = `Today is Aug 6, 2025!`;
+      else                el.textContent = `Aug 6, 2025 has passed.`;
+    })();
+
+    const examLinks = [
+      "https://docs.google.com/forms/d/e/1FAIpQLSc7WrQHn6nWm5cXqH5lq-BdJ_9B9XYj3bOp-9EADQp4o2J1Vg/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSeM3RxIqyWImd2kIRzBsCfIAhuiXGyiifPIITU3LbTfthYD-Q/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSdGg16sF-0jgbPH0EzD7AI4HnfNLgHU_CDroC9tgiNWBnK9Tw/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSc5s_VV8N-udt0AtJ_jrRSK-pe2QjBjiuvkw9kZFgPT4X8CcA/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSc9_QnqNV3oPJGDsBFuGT0Hfihc4tde0plwiGjZqV41tA1vww/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSfnmiLFauMGaZFagWdOJ-spBxvf1fcc3lDzB_d_ufYKy2dZiQ/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSfbWAEjNuK4FA1ZMNeJtYu10SRqbXXNZS5ky2ApRnuAzliCPg/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSfi4mkp9cJfq-P0x79Lhb3SGP7XswmJ2KXWbrwVIT8nmlpKqA/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSdwwKBq7y6mEMOyhuqUCAR-tYKSefnhDWU1qrI3quRzQ9jriQ/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSdEOv58AMj_50qraSBvXxn1gwmI_-kd8RDe8F3tqpSYQWNSPw/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSelXE_WwOSEXiraMvN7gpF-_KauXHT8c_a1lVjYamo5dbQFGA/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSeEIqpSbzMmvk6nfID2wd1QIPIGZJCWrANyWpaSfZJs4YlINg/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLScwL_S75bim-pXbmYMjzA2AX-HSmXwKOUE-pU2BEClxQbNR7g/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLScqkkTpnVTNpNVpZ4Cmj_WA5v0BnqtCft74ADNnT0Tl9rJQDg/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSfnq1B5KutQNIMyWHaBihaslGKfmPvDK0VvvLoBLvir69LXqA/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSebfMIM6lFJJKXwfraiZSeF6vHfLM5pLO98SlLdH_8CRLhooA/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSdr1yN50LpIs2YcDS3PtcCQ3x25lrJwrV6iWJzp-u9H6P4KlQ/viewform"
+    ];
+    const btnContainer = document.getElementById('buttons');
+    examLinks.forEach((link, i) => {
+      const btn = document.createElement('button');
+      btn.textContent = `Open Exam ${i+1}`;
+      btn.onclick = () => {
+        const sep = link.includes('?') ? '&' : '?';
+        window.open(link + sep + 'authuser=1', '_blank');
+      };
+      btnContainer.appendChild(btn);
+    });
+
+    // STARFIELD
+    (function(){
+      const container = document.getElementById('stars');
+      for (let i = 0; i < starCount; i++){
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        const size = Math.random() * 2 + 1;
+        dot.style.width  = `${size}px`;
+        dot.style.height = `${size}px`;
+        dot.style.top    = `${Math.random() * 100}%`;
+        dot.style.left   = `${Math.random() * 100}%`;
+        dot.style.animationDuration = `${8 + Math.random() * 7}s`;
+        dot.style.animationDelay    = `${-Math.random() * 10}s`;
+        container.appendChild(dot);
+      }
+    })();
+  </script>
+</body>
+</html>
+

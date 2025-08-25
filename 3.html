@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>3</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      min-height: 100%;
+      background: #0a0a1a;
+      color: #eee;
+      font-family: 'Poppins', sans-serif;
+      overflow-x: hidden;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+    body::-webkit-scrollbar { width: 0; }
+    body { scrollbar-width: none; -ms-overflow-style: none; }
+
+    #counter {
+      text-align: center;
+      font-size: 1.2rem;
+      color: #f0c674;
+      margin: 20px 0 0 50px;
+      position: relative;
+      z-index: 2;
+    }
+
+    #buttons {
+      max-width: 420px;
+      margin: 0 auto 60px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      position: relative;
+      z-index: 2;
+    }
+
+    button {
+      all: unset;
+      width: 100%;
+      padding: 25px 25px;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: #aabcee;
+      border: 3px solid #2b63ff;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: border-color .3s, box-shadow .3s, transform .2s, color .3s;
+    }
+    button:hover {
+      color: #fff;
+      border-color: #8a44ff;
+      box-shadow: 0 0 10px #2b63ff, 0 0 20px #8a44ff;
+      transform: scaleY(1.1);
+    }
+    button:active {
+      transform: scaleY(0.95);
+      box-shadow: none;
+      border-color: #2b63ff;
+      color: #aabcee;
+    }
+
+    /* STARFIELD */
+    #stars {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      overflow: hidden;
+      background: #0a0a1a;
+      z-index: 1;
+    }
+    .dot {
+      position: absolute;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: drift linear infinite;
+    }
+    @keyframes drift {
+      to { transform: translate(120vw, -120vh); }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="counter"></div>
+  <div id="buttons"></div>
+  <div id="stars"></div>
+
+  <script>
+    // CONFIG: how many stars?
+    const starCount = 60;
+
+    // DAYS COUNTER
+    (function(){
+      const today  = new Date();
+      const target = new Date(2025, 7, 6); // Aug 6, 2025
+      const days   = Math.ceil((target - today) / (1000*60*60*24));
+      const el     = document.getElementById('counter');
+      if      (days > 0)  el.textContent = `${days} DAY${days>1?'S':''}`;
+      else if (days === 0) el.textContent = `Today is Aug 6, 2025!`;
+      else                el.textContent = `Aug 6, 2025 has passed.`;
+    })();
+
+    const examLinks = [
+      "https://docs.google.com/forms/d/e/1FAIpQLSdlNmWuje-YxnEAshqWga5FOszgMs1-VOCMi5hx1KDVl84lVQ/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSc5k4f9e7zyT_KOGEs09IwiKUSMTettD1OQEk5OhzAe2qGYTQ/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSdbCN5jivJEdanvVwgI-mkGw8nFLowOOg4muP4MuTk6D2Bqhg/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSfqMLRU4Ucr3BnjML-QitWkueiNiPmZkJrM2AnRoxa3KRl0tA/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLScls02jerf1kYV1TGb7-VF_khTXvrdr5GohCPJMbXjhW7baog/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLScJfq1E_pr9p7ZqwXbJ4W-dJh9mRYxo9D0493Xg6v4wsg5S5g/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSeTez61OYmt2dqpFJ-O_l9UqlIOGJHaXskU1aZBV1B2Jzdv-A/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSeJb2AOXVi5x0Wd3VkP0fiqxoYKJVUjGknMhd2GGJFkehz6HQ/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLScsbzVDaztW9j0o-29iBbaY23EDYeAByF1F1h4DM0baNUbDzw/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSfUUVY_rfx3TlG53BIWmaChxG7eXP1FBivP1eO0j8tJ-xeamQ/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSeVJlej5OwOvts7NqRUMzHWaY4EE0HYLJY1J6pAfloOqLAijw/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSdZlRyRLzys6C4QHVpn2MPMYdRlBVAEa7iUhyYPoTGHYZ_l0Q/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSczWSZ5E7XPG5Vj8xoO4-hz-9IXSOz8mChdOX1Y_KjxoVIOpw/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSfeKgum73d5rEZjxJSasH0tcZGZGBYhERQlqtOL58Rz67PIpw/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSdj0BHBSNOmhHM-vJkE26UD5bpU4zFEmW3QHiYvQ61ErTBFNw/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSfPHfvEK8iU5ZQO8kyyzZL98MyGz7uuC0i1_hOIezBrESVUWw/viewform",
+      "https://docs.google.com/forms/d/e/1FAIpQLSd11WQ4svQlfnQXotk_sbuuVSuGLcMIHAkhefsfNosodMYzBg/viewform"
+    ];
+    const btnContainer = document.getElementById('buttons');
+    examLinks.forEach((link, i) => {
+      const btn = document.createElement('button');
+      btn.textContent = `Open Exam ${i + 1}`;
+      btn.onclick = () => {
+        const sep = link.includes('?') ? '&' : '?';
+        window.open(link + sep + 'authuser=1', '_blank');
+      };
+      btnContainer.appendChild(btn);
+    });
+
+    // STARFIELD
+    (function(){
+      const container = document.getElementById('stars');
+      for (let i = 0; i < starCount; i++){
+        const dot = document.createElement('div');
+        dot.className = 'dot';
+        const size = Math.random() * 2 + 1;
+        dot.style.width  = `${size}px`;
+        dot.style.height = `${size}px`;
+        dot.style.top    = `${Math.random() * 100}%`;
+        dot.style.left   = `${Math.random() * 100}%`;
+        dot.style.animationDuration = `${8 + Math.random() * 7}s`;
+        dot.style.animationDelay    = `${-Math.random() * 10}s`;
+        container.appendChild(dot);
+      }
+    })();
+  </script>
+</body>
+</html>
